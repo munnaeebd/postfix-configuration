@@ -18,3 +18,14 @@ systemctl restart postfix
 
 crontab: 
 0 */12 * * * /root/clamav.sh
+
+ClamAV Installation:
+
+~~~
+yum install epel-release -y
+yum install clamav -y
+vi /etc/clamd.d/scan.conf
+remove # from --> LocalSocket /run/clamd.scan/clamd.sock
+
+freshclam
+~~~
