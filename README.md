@@ -14,3 +14,7 @@ chmod 600 /etc/postfix/sasl_passwd*
 yum install cyrus-sasl cyrus-sasl-plain
 systemctl restart postfix
 ~~~
+
+
+crontab: 
+0 */12 * * * /root/clamav.sh
