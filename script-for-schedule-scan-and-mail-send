@@ -1,0 +1,25 @@
+#!/bin/bash
+LOGFILE="/var/log/clamav/clamav-$(date +'%Y-%m-%d').log";
+#EMAIL_MSG="Please see the log file attached";
+EMAIL_FROM="clamav@test-bed.brilliant.com.bd";
+EMAIL_TO="cloud.operation@brilliant.com.bd";
+DIRTOSCAN="/";
+
+for S in ${DIRTOSCAN}; do
+ DIRSIZE=$(du -sh "$S" 2>/dev/null | cut -f1);
+
+ echo "Starting scan of "$S" directory.
+ Directory size: "$DIRSIZE".";
+
+ clamscan -ri "$S" >> "$LOGFILE";
+ #clamscan -ri --remove "$S" >> "$LOGFILE";
+
+ #find /var/log/clamav/ -type f -mtime +30 -exec rm {} \;
+ MALWARE=$(tail "$LOGFILE"|grep Infected|cut -d" " -f3);
+EMAIL_MSG="Please see the log file attached. Please note that, number of infected file is: $MALWARE ";
+# if [ "$MALWARE" -ne "0" ];then
+ echo "$EMAIL_MSG"|mail -a "$LOGFILE" -s "ClamAV Scan Report || Test-VM-36.255.68.10 ||Scanning: $DIRTOSCAN || $(date +'%d-%m-%Y')" -r "$EMAIL_FROM" "$EMAIL_TO";
+# fi
+done
+
+exit 0
